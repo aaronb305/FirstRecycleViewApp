@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.recycleviewapp.R
+import com.example.recycleviewapp.databinding.FragmentThirdBinding
+import com.example.recycleviewapp.model.Event
+import com.example.recycleviewapp.navigate
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +25,9 @@ class ThirdFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val binding by lazy {
+        FragmentThirdBinding.inflate(layoutInflater)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,9 +40,15 @@ class ThirdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        binding.backButton.setOnClickListener {
+            navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_third, container, false)
+        return binding.root
     }
+
+
 
     companion object {
         /**
