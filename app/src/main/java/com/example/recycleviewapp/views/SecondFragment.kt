@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CalendarView
 import android.widget.Toast
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.adapter.MyEventAdapter
@@ -58,17 +59,16 @@ class SecondFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        binding.eventCalendar.setOnDateChangeListener { calendarView, i, i2, i3 ->
-
-        }
+        binding.eventCalendar.setOnDateChangeListener(CalendarView.OnDateChangeListener { calendarView, i, i2, i3 ->
+            date = binding.eventCalendar.date
+            var sdf = SimpleDateFormat("MM/dd/yyyy")
+            formattedDate = sdf.format(date)
+        })
 
         binding.doneButton.setOnClickListener {
             if (binding.titleField.text.isNotEmpty() && binding.categoryField.text.isNotEmpty()) {
                 title = binding.titleField.text.toString()
                 category = binding.categoryField.text.toString()
-                date = binding.eventCalendar.date
-                var sdf = SimpleDateFormat("MM/dd/yyyy")
-                formattedDate = sdf.format(date)
                 MySingleton.addEvent(Event(title, category, formattedDate))
                 navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
             }
