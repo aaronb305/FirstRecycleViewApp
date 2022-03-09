@@ -54,6 +54,9 @@ class FirstFragment : Fragment() {
         binding.myRecycleView.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = eventAdapter
+            MySingleton.event.sortBy {
+                it.date
+            }
             for (event in MySingleton.event) {
                 eventAdapter.updateEventData(event)
             }

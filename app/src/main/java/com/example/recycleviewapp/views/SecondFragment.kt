@@ -60,11 +60,14 @@ class SecondFragment : Fragment() {
         // Inflate the layout for this fragment
 
         binding.eventCalendar.setOnDateChangeListener(CalendarView.OnDateChangeListener { calendarView, i, i2, i3 ->
-            date = binding.eventCalendar.date
-            var sdf = SimpleDateFormat("MM/dd/yyyy")
-            formattedDate = sdf.format(date)
+            val month = i2 + 1
+            formattedDate = "$month/$i3/$i"
         })
 
+        binding.backBtn?.setOnClickListener {
+            navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
+        }
+        
         binding.doneButton.setOnClickListener {
             if (binding.titleField.text.isNotEmpty() && binding.categoryField.text.isNotEmpty()) {
                 title = binding.titleField.text.toString()
