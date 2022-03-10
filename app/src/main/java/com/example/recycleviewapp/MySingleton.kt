@@ -8,6 +8,10 @@ object MySingleton {
         MySingleton.event.add(event)
     }
 
+    fun removeEvent(event: Event) {
+        MySingleton.event.remove(event)
+    }
+
     init {}
 //    var title = mutableListOf<String>()
 //    var category = mutableListOf<String>()

@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.R
 import com.example.recycleviewapp.adapter.MyEventAdapter
 import com.example.recycleviewapp.databinding.FragmentFirstBinding
 import com.example.recycleviewapp.navigate
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,6 +97,24 @@ class FirstFragment : Fragment() {
             }
         })
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val localDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        val sdf = SimpleDateFormat("MM/dd/yyyy")
+        val startDate = LocalDate.parse(LocalDate.now().format(localDateFormatter), localDateFormatter)
+        for (event in MySingleton.event) {
+            val date = sdf.parse(event.date).time
+            val endDate = LocalDate.parse(sdf.format(date), localDateFormatter)
+            val zero: Long = 0
+            if (ChronoUnit.DAYS.between(startDate, endDate) == zero) {
+                val duration = Toast.LENGTH_LONG
+                val msg = "${event.title} is today!"
+                Toast.makeText(requireContext(), msg, duration).show()
+            }
+        }
     }
 
 //    override fun onSaveInstanceState(outState: Bundle) {

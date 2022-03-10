@@ -85,8 +85,13 @@ class ThirdFragment : Fragment() {
             binding.daysUntil.setText("Days until task: $daysBetween")
         }.let {
             binding.calendar.date = date
-
         }
+
+        binding.deleteButton.setOnClickListener {
+            MySingleton.removeEvent(MySingleton.event[position])
+            navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
+        }
+
         binding.saveButton.setOnClickListener {
             MySingleton.event[position].title = binding.title.text.toString()
             MySingleton.event[position].category = binding.category.text.toString()
