@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.R
 import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
@@ -13,23 +14,25 @@ import com.example.recycleviewapp.views.ThirdFragment
 import java.util.zip.Inflater
 
 class MyEventAdapter(
-    private val eventList: MutableList<Event> = mutableListOf(),
-//    private val listener: (Event) -> Unit
+    private val eventList: MutableList<Event> = mutableListOf()
 ) : RecyclerView.Adapter<EventViewHolder>() {
 
-    private lateinit var mListener: onItemClickListener
+    private lateinit var mListener: OnEventClickListener
 
-    interface onItemClickListener{
-        fun onItemClick(position: Int)
+    interface OnEventClickListener{
+        fun onEventClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener) {
+    fun setOnItemClickListener(listener: OnEventClickListener) {
         mListener = listener
     }
 
     fun updateEventData(event: Event) {
         eventList.add(0, event)
         notifyItemInserted(eventList.indexOf(event))
+//        eventList.clear()
+//        eventList.addAll(MySingleton.event)
+//        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -45,21 +48,19 @@ class MyEventAdapter(
 
     override fun getItemCount(): Int = eventList.size
 
-//    class onClickListener(val clickListener: (event: Event) -> Unit) {
-//        fun onClick(event: Event) = clickListener(event)
-//    }
+
 
 }
 
 
-class EventViewHolder(itemView: View, listener: MyEventAdapter.onItemClickListener) : RecyclerView.ViewHolder(itemView) {
+class EventViewHolder(itemView: View, listener: MyEventAdapter.OnEventClickListener) : RecyclerView.ViewHolder(itemView) {
     private val title: TextView = itemView.findViewById(R.id.eventTitle)
     private val category: TextView  = itemView.findViewById(R.id.eventCategory)
     private val date: TextView = itemView.findViewById(R.id.eventDate)
 
     init {
         itemView.setOnClickListener {
-            listener.onItemClick(adapterPosition)
+            listener.onEventClick(adapterPosition)
         }
     }
 

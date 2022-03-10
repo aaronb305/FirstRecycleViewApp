@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.adapter.MyEventAdapter
 import com.example.recycleviewapp.databinding.FragmentFirstBinding
@@ -35,6 +34,10 @@ class FirstFragment : Fragment() {
         MyEventAdapter()
     }
 
+    private val bundle by lazy {
+        Bundle()
+    }
+
     private lateinit var myFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,24 +57,24 @@ class FirstFragment : Fragment() {
         binding.myRecycleView.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = eventAdapter
-            MySingleton.event.sortBy {
+            var descending = MySingleton.event.sortByDescending {
                 it.date
             }
-            for (event in MySingleton.event) {
-                eventAdapter.updateEventData(event)
-            }
         }
+        for (event in MySingleton.event) {
+            eventAdapter.updateEventData(event)
+        }
+//        eventAdapter.updateEventData(event = MySingleton.event)
 
         binding.floatingButton.setOnClickListener {
             navigate(supportFragmentManager = requireActivity().supportFragmentManager, SecondFragment.newInstance("", ""))
         }
 
-        eventAdapter.setOnItemClickListener(object: MyEventAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
+        eventAdapter.setOnItemClickListener(object: MyEventAdapter.OnEventClickListener{
+            override fun onEventClick(position: Int) {
+                bundle.putInt("position", position)
                 navigate(supportFragmentManager = requireActivity().supportFragmentManager, ThirdFragment.newInstance("",""))
             }
-
-
         })
         return binding.root
     }

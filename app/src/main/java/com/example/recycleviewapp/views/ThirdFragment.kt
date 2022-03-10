@@ -1,14 +1,19 @@
 package com.example.recycleviewapp.views
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.R
 import com.example.recycleviewapp.databinding.FragmentThirdBinding
 import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,6 +33,9 @@ class ThirdFragment : Fragment() {
     private val binding by lazy {
         FragmentThirdBinding.inflate(layoutInflater)
     }
+
+    private var position by Delegates.notNull<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -40,6 +48,14 @@ class ThirdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val bundle = this.arguments
+        if (bundle != null) {
+            position = bundle.getInt("position")
+        }
+        binding.title.text = MySingleton.event[position].title
+        binding.category.text = MySingleton.event[position].category
+//        val date = LocalDate.parse(MySingleton.event[position].date, DateTimeFormatter.ISO_LOCAL_DATE)
+//        binding.calendar.date = date.toEpochDay()
 
         binding.backButton.setOnClickListener {
             navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))

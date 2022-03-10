@@ -61,13 +61,26 @@ class SecondFragment : Fragment() {
 
         binding.eventCalendar.setOnDateChangeListener(CalendarView.OnDateChangeListener { calendarView, i, i2, i3 ->
             val month = i2 + 1
-            formattedDate = "$month/$i3/$i"
-        })
+            if (month <= 9) {
+                if (i3 <= 9) {
+                    formattedDate = "0$month/0$i3/$i"
+                }
+                else {
+                    formattedDate = "0$month/$i3/$i"
+                }
+            }
+            else {
+                formattedDate = "$month/$i3/$i"
+            }
+        }).let {
+            val sdf = SimpleDateFormat("MM/dd/yyyy")
+            formattedDate = sdf.format(binding.eventCalendar.date)
+        }
 
-        binding.backBtn?.setOnClickListener {
+        binding.backBtn.setOnClickListener {
             navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
         }
-        
+
         binding.doneButton.setOnClickListener {
             if (binding.titleField.text.isNotEmpty() && binding.categoryField.text.isNotEmpty()) {
                 title = binding.titleField.text.toString()
@@ -77,7 +90,7 @@ class SecondFragment : Fragment() {
             }
             else {
                 val duration = Toast.LENGTH_LONG
-                val errorMsg = "Please enter a title and/or category"
+                val errorMsg = "Please enter all required fields"
                 Toast.makeText(requireContext(), errorMsg, duration).show()
             }
         }

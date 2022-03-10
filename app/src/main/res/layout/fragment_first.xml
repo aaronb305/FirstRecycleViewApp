@@ -10,14 +10,13 @@
 
     <Spinner
         android:id="@+id/dropdown_menu"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="5dp"
-        android:background="@color/grey"
-        android:spinnerMode="dropdown"
         android:entries="@array/howToSort"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/todo" />
 
     <TextView
@@ -27,6 +26,7 @@
         android:gravity="center"
         android:text="@string/tasks"
         android:textColor="@color/black"
+        android:textStyle="bold"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,9 +34,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myRecycleView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="600dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dropdown_menu"/>
+        app:layout_constraintTop_toBottomOf="@+id/dropdown_menu" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingButton"

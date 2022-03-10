@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">RecycleViewApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_first_fragment">Hello First Fragment</string>
-    <string name="hello_second_fragment">Hello second fragment</string>
-    <string name="hello_third_fragment">Hello third fragment</string>
     <string name="event_title">Event Title</string>
     <string name="event_category">Event Category</string>
     <string name="done">Done</string>
     <string name="tasks">Tasks</string>
+    <string name="title">Title:</string>
+    <string name="category">Category:</string>
+    <string name="back">Back</string>
+    <string name="date">Date:</string>
+    <string name="days_until_task">Days until Task:</string>
     <string-array name="howToSort">
         <item>Ascending order</item>
         <item>Descending order</item>
