@@ -28,7 +28,7 @@ class MyEventAdapter(
     }
 
     fun updateEventData(event: Event) {
-        eventList.add(0, event)
+        eventList.add( event)
         notifyItemInserted(eventList.indexOf(event))
     }
 

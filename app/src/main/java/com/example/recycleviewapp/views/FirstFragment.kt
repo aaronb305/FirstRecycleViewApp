@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recycleviewapp.MySingleton
+import com.example.recycleviewapp.R
 import com.example.recycleviewapp.adapter.MyEventAdapter
 import com.example.recycleviewapp.databinding.FragmentFirstBinding
 import com.example.recycleviewapp.navigate
@@ -58,7 +59,20 @@ class FirstFragment : Fragment() {
         binding.myRecycleView.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = eventAdapter
-            var descending = MySingleton.event.sortByDescending {
+//            if (binding.dropdownMenu.equals(R.array.howToSort)) {
+//                var descending = MySingleton.event.sortByDescending {
+//                    it.date
+//                }
+//            }
+//            else {
+//                var ascending = MySingleton.event.sortBy {
+//                    it.date
+//                }
+//            }
+//            var descending = MySingleton.event.sortByDescending {
+//                it.date
+//            }
+            var ascending = MySingleton.event.sortBy {
                 it.date
             }
         }
@@ -73,8 +87,8 @@ class FirstFragment : Fragment() {
         eventAdapter.setOnItemClickListener(object: MyEventAdapter.OnEventClickListener{
             override fun onEventClick(position: Int) {
                 bundle.putInt("position", position)
-//                Log.d("***", position.toString())
-                navigate(supportFragmentManager = requireActivity().supportFragmentManager, ThirdFragment.newInstance("",""))
+                Log.d("***", position.toString())
+                navigate(supportFragmentManager = requireActivity().supportFragmentManager, ThirdFragment.newInstance(position))
             }
         })
         return binding.root
