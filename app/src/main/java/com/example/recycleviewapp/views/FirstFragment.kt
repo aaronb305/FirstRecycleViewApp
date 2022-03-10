@@ -64,7 +64,6 @@ class FirstFragment : Fragment() {
         for (event in MySingleton.event) {
             eventAdapter.updateEventData(event)
         }
-//        eventAdapter.updateEventData(event = MySingleton.event)
 
         binding.floatingButton.setOnClickListener {
             navigate(supportFragmentManager = requireActivity().supportFragmentManager, SecondFragment.newInstance("", ""))

@@ -1,5 +1,6 @@
 package com.example.recycleviewapp.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -37,6 +38,8 @@ class ThirdFragment : Fragment() {
 
     private var position by Delegates.notNull<Int>()
 
+    private lateinit var formattedDate: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -53,12 +56,36 @@ class ThirdFragment : Fragment() {
         if (bundle != null) {
             position = bundle.getInt("position")
         }
-        binding.title.text = MySingleton.event[position].title
-        binding.category.text = MySingleton.event[position].category
+        binding.title.setText(MySingleton.event[position].title)
+        binding.category.setText(MySingleton.event[position].category)
         val sdf = SimpleDateFormat("MM/dd/yyyy")
-        val date = sdf.parse(MySingleton.event[position].date).time
-       binding.calendar.date = date
+        var date = sdf.parse(MySingleton.event[position].date).time
+//        binding.calendar.date = date
 
+        binding.calendar.setOnDateChangeListener { calendarView, i, i2, i3 ->
+            val month = i2 + 1
+            if (month <= 9) {
+                if (i3 <= 9) {
+                    formattedDate = "0$month/0$i3/$i"
+                }
+                else {
+                    formattedDate = "0$month/$i3/$i"
+                }
+            }
+            else {
+                formattedDate = "$month/$i3/$i"
+            }
+            date = sdf.parse(formattedDate).time
+        }.let {
+            binding.calendar.date = date
+
+        }
+        binding.saveButton.setOnClickListener {
+            MySingleton.event[position].title = binding.title.text.toString()
+            MySingleton.event[position].category = binding.category.text.toString()
+            MySingleton.event[position].date = sdf.format(date)
+            navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
+        }
         binding.backButton.setOnClickListener {
             navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
         }

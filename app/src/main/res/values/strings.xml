@@ -9,6 +9,7 @@
     <string name="back">Back</string>
     <string name="date">Date:</string>
     <string name="days_until_task">Days until Task:</string>
+    <string name="save">Save</string>
     <string-array name="howToSort">
         <item>Ascending order</item>
         <item>Descending order</item>
