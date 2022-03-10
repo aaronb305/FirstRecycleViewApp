@@ -1,6 +1,7 @@
 package com.example.recycleviewapp.views
 
 import android.annotation.SuppressLint
+import android.icu.util.TimeUnit
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,12 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.R
+import com.example.recycleviewapp.adapter.EventViewHolder
 import com.example.recycleviewapp.databinding.FragmentThirdBinding
 import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.*
 import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,12 +59,17 @@ class ThirdFragment : Fragment() {
         val bundle = this.arguments
         if (bundle != null) {
             position = bundle.getInt("position")
+            Log.d("****",position.toString())
         }
         binding.title.setText(MySingleton.event[position].title)
         binding.category.setText(MySingleton.event[position].category)
         val sdf = SimpleDateFormat("MM/dd/yyyy")
         var date = sdf.parse(MySingleton.event[position].date).time
-//        binding.calendar.date = date
+        val localDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+        val startDate = LocalDate.parse(LocalDate.now().format(localDateFormatter), localDateFormatter)
+        var endDate = LocalDate.parse(sdf.format(date), localDateFormatter)
+        var daysBetween = ChronoUnit.DAYS.between(startDate, endDate)
+        binding.daysUntil.setText("Days until task: $daysBetween")
 
         binding.calendar.setOnDateChangeListener { calendarView, i, i2, i3 ->
             val month = i2 + 1
@@ -76,6 +85,9 @@ class ThirdFragment : Fragment() {
                 formattedDate = "$month/$i3/$i"
             }
             date = sdf.parse(formattedDate).time
+            endDate = LocalDate.parse(sdf.format(date),localDateFormatter)
+            daysBetween = ChronoUnit.DAYS.between(startDate, endDate)
+            binding.daysUntil.setText("Days until task: $daysBetween")
         }.let {
             binding.calendar.date = date
 

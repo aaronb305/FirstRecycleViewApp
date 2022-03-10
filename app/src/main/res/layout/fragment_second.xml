@@ -22,9 +22,7 @@
         android:id="@+id/titleField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:hint="@string/event_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf ="@id/title"/>
@@ -44,9 +42,7 @@
         android:id="@+id/categoryField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:hint="@string/event_category"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/category"/>
@@ -68,7 +64,6 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/date"/>
 

@@ -30,9 +30,6 @@ class MyEventAdapter(
     fun updateEventData(event: Event) {
         eventList.add(0, event)
         notifyItemInserted(eventList.indexOf(event))
-//        eventList.clear()
-//        eventList.addAll(MySingleton.event)
-//        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
