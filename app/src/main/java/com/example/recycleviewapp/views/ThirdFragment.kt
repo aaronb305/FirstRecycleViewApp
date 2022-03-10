@@ -11,6 +11,7 @@ import com.example.recycleviewapp.R
 import com.example.recycleviewapp.databinding.FragmentThirdBinding
 import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.properties.Delegates
@@ -54,8 +55,9 @@ class ThirdFragment : Fragment() {
         }
         binding.title.text = MySingleton.event[position].title
         binding.category.text = MySingleton.event[position].category
-//        val date = LocalDate.parse(MySingleton.event[position].date, DateTimeFormatter.ISO_LOCAL_DATE)
-//        binding.calendar.date = date.toEpochDay()
+        val sdf = SimpleDateFormat("MM/dd/yyyy")
+        val date = sdf.parse(MySingleton.event[position].date).time
+       binding.calendar.date = date
 
         binding.backButton.setOnClickListener {
             navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
