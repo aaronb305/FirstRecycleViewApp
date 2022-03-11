@@ -88,10 +88,8 @@ class FirstFragment : Fragment() {
                            it.date
                         }
                     }
-//                    val database = Room.databaseBuilder(requireContext(), EventDatabase::class.java, "EventDatabase")
-//                        .build()
-//                    val eventDao = database.eventDao()
-//                    Log.d("***",eventDao.getAll().toString())
+
+//
                     eventAdapter.updateEventData(MySingleton.event)
                 }
 
@@ -99,6 +97,10 @@ class FirstFragment : Fragment() {
                     TODO("Not yet implemented")
                 }
             }
+            val database = Room.databaseBuilder(requireContext(), EventDatabase::class.java, "EventDatabase")
+                .build()
+            val eventDao = database.eventDao()
+//            eventDao.getAll()
         }
 
         binding.floatingButton.setOnClickListener {
