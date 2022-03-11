@@ -54,7 +54,6 @@ class ThirdFragment : Fragment() {
         val bundle = this.arguments
         if (bundle != null) {
             position = bundle.getInt("position")
-            Log.d("****",position.toString())
         }
         binding.title.setText(MySingleton.event[position].title)
         binding.category.setText(MySingleton.event[position].category)

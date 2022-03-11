@@ -27,9 +27,10 @@ class MyEventAdapter(
         mListener = listener
     }
 
-    fun updateEventData(event: Event) {
-        eventList.add( event)
-        notifyItemInserted(eventList.indexOf(event))
+    fun updateEventData(events: MutableList<Event>) {
+        eventList.clear()
+        eventList.addAll(events)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {

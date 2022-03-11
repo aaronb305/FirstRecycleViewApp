@@ -1,16 +1,25 @@
 package com.example.recycleviewapp.views
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.R
 import com.example.recycleviewapp.adapter.MyEventAdapter
+import com.example.recycleviewapp.database.EventData
+import com.example.recycleviewapp.database.EventDatabase
 import com.example.recycleviewapp.databinding.FragmentFirstBinding
 import com.example.recycleviewapp.navigate
 import java.text.SimpleDateFormat
@@ -64,25 +73,32 @@ class FirstFragment : Fragment() {
         binding.myRecycleView.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = eventAdapter
-//            if (binding.dropdownMenu.equals(R.array.howToSort)) {
-//                var descending = MySingleton.event.sortByDescending {
-//                    it.date
-//                }
-//            }
-//            else {
-//                var ascending = MySingleton.event.sortBy {
-//                    it.date
-//                }
-//            }
-//            var descending = MySingleton.event.sortByDescending {
-//                it.date
-//            }
-            var ascending = MySingleton.event.sortBy {
-                it.date
+
+            binding.dropdownMenu.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    val selectedItem = p0?.getItemAtPosition(p2).toString()
+                    val stringArray = resources.getStringArray(R.array.howToSort)
+                    if (selectedItem.equals(stringArray[0])) {
+                        val ascending = MySingleton.event.sortBy {
+                            it.date
+                        }
+                    }
+                    else {
+                        var descending = MySingleton.event.sortByDescending {
+                           it.date
+                        }
+                    }
+//                    val database = Room.databaseBuilder(requireContext(), EventDatabase::class.java, "EventDatabase")
+//                        .build()
+//                    val eventDao = database.eventDao()
+//                    Log.d("***",eventDao.getAll().toString())
+                    eventAdapter.updateEventData(MySingleton.event)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
             }
-        }
-        for (event in MySingleton.event) {
-            eventAdapter.updateEventData(event)
         }
 
         binding.floatingButton.setOnClickListener {
@@ -92,7 +108,6 @@ class FirstFragment : Fragment() {
         eventAdapter.setOnItemClickListener(object: MyEventAdapter.OnEventClickListener{
             override fun onEventClick(position: Int) {
                 bundle.putInt("position", position)
-                Log.d("***", position.toString())
                 navigate(supportFragmentManager = requireActivity().supportFragmentManager, ThirdFragment.newInstance(position))
             }
         })
@@ -102,6 +117,11 @@ class FirstFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        val channelId = "myChannel"
+        val myChannel = NotificationChannel(channelId, "Events Today", NotificationManager.IMPORTANCE_HIGH)
+
+        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         val localDateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
         val sdf = SimpleDateFormat("MM/dd/yyyy")
         val startDate = LocalDate.parse(LocalDate.now().format(localDateFormatter), localDateFormatter)
@@ -110,9 +130,15 @@ class FirstFragment : Fragment() {
             val endDate = LocalDate.parse(sdf.format(date), localDateFormatter)
             val zero: Long = 0
             if (ChronoUnit.DAYS.between(startDate, endDate) == zero) {
-                val duration = Toast.LENGTH_LONG
                 val msg = "${event.title} is today!"
-                Toast.makeText(requireContext(), msg, duration).show()
+                val myNotification = NotificationCompat.Builder(requireContext(), channelId)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle("You have an event today!")
+                    .setContentText(msg)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .build()
+                notificationManager.createNotificationChannel(myChannel)
+                notificationManager.notify(123, myNotification)
             }
         }
     }

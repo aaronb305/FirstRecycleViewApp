@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.Toast
+import androidx.room.Room
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.adapter.MyEventAdapter
+import com.example.recycleviewapp.database.EventData
+import com.example.recycleviewapp.database.EventDatabase
 import com.example.recycleviewapp.databinding.FragmentSecondBinding
 import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
@@ -40,8 +43,6 @@ class SecondFragment : Fragment() {
 
     private lateinit var title: String
     private lateinit var category: String
-    private var date by Delegates.notNull<Long>()
-//    private lateinit var date: String
     private lateinit var formattedDate: String
 
 
@@ -59,6 +60,9 @@ class SecondFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
+//        val dataBase = Room.databaseBuilder(requireContext(), EventDatabase::class.java, "EventDatabase")
+//            .build()
+//        val eventDao = dataBase.eventDao()
         binding.eventCalendar.setOnDateChangeListener(CalendarView.OnDateChangeListener { calendarView, i, i2, i3 ->
             val month = i2 + 1
             if (month <= 9) {
@@ -85,7 +89,10 @@ class SecondFragment : Fragment() {
             if (binding.titleField.text.isNotEmpty() && binding.categoryField.text.isNotEmpty()) {
                 title = binding.titleField.text.toString()
                 category = binding.categoryField.text.toString()
-                MySingleton.addEvent(Event(title, category, formattedDate))
+                val event = Event(title, category, formattedDate)
+                MySingleton.addEvent(event)
+//                val eventData = event as EventData
+//                eventDao.insertUser(eventData)
                 navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
             }
             else {
