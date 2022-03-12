@@ -16,6 +16,9 @@ import com.example.recycleviewapp.database.EventDatabase
 import com.example.recycleviewapp.databinding.FragmentSecondBinding
 import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import kotlin.properties.Delegates
 
@@ -42,9 +45,12 @@ class SecondFragment : Fragment() {
         MyEventAdapter()
     }
 
+    private lateinit var sdf: SimpleDateFormat
+
     private lateinit var title: String
     private lateinit var category: String
     private lateinit var formattedDate: String
+    private var date by Delegates.notNull<Long>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +67,7 @@ class SecondFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
+        sdf = SimpleDateFormat("MM/dd/yyyy")
         val dataBase = Room.databaseBuilder(requireContext(), EventDatabase::class.java, "EventDatabase")
             .build()
         val eventDao = dataBase.eventDao()
@@ -78,7 +85,6 @@ class SecondFragment : Fragment() {
                 formattedDate = "$month/$i3/$i"
             }
         }).let {
-            val sdf = SimpleDateFormat("MM/dd/yyyy")
             formattedDate = sdf.format(binding.eventCalendar.date)
         }
 
@@ -92,8 +98,13 @@ class SecondFragment : Fragment() {
                 category = binding.categoryField.text.toString()
                 val event = Event(title, category, formattedDate)
                 MySingleton.addEvent(event)
-                val eventData = EventData(1, title, category, formattedDate)
+//                val eventData = EventData(Math.random().toInt(), title, category, formattedDate)
 //                eventDao.insertUser(eventData)
+//                    .subscribeOn(Schedulers.io())
+//                    .subscribe({}, {})
+//                    .apply {
+//                        CompositeDisposable().add(this)
+//                    }
                 navigate(supportFragmentManager = requireActivity().supportFragmentManager, FirstFragment.newInstance("", ""))
             }
             else {
@@ -103,6 +114,27 @@ class SecondFragment : Fragment() {
             }
         }
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        date = if (formattedDate.isNotEmpty()) {
+            sdf.parse(formattedDate).time
+        } else {
+            binding.eventCalendar.date
+        }
+        outState.putLong("date", date)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        val tempDate: Long
+        if (savedInstanceState!= null) {
+            tempDate = savedInstanceState?.getLong("date")
+            binding.eventCalendar.date = tempDate
+            formattedDate = sdf.format(tempDate)
+        }
+
     }
 
     companion object {

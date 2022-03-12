@@ -3,6 +3,7 @@ package com.example.recycleviewapp.views
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.usage.UsageEvents
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -21,11 +22,16 @@ import com.example.recycleviewapp.adapter.MyEventAdapter
 import com.example.recycleviewapp.database.EventData
 import com.example.recycleviewapp.database.EventDatabase
 import com.example.recycleviewapp.databinding.FragmentFirstBinding
+import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,7 +60,7 @@ class FirstFragment : Fragment() {
         Bundle()
     }
 
-    private lateinit var myFragment: Fragment
+    private var notification by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +95,7 @@ class FirstFragment : Fragment() {
                         }
                     }
 
-//
+
                     eventAdapter.updateEventData(MySingleton.event)
                 }
 
@@ -101,6 +107,12 @@ class FirstFragment : Fragment() {
                 .build()
             val eventDao = database.eventDao()
 //            eventDao.getAll()
+//                .subscribeOn(Schedulers.io())
+//                .subscribe({Log.d("****",it[1].title)},
+//                    {})
+//                .apply {
+//                    CompositeDisposable().add(this)
+//                }
         }
 
         binding.floatingButton.setOnClickListener {

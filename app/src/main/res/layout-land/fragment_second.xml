@@ -10,9 +10,9 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:text="@string/title"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,31 +20,31 @@
 
     <EditText
         android:id="@+id/titleField"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:textSize="12sp"
+        android:textSize="20sp"
         android:hint="@string/event_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf ="@id/title"/>
 
     <TextView
         android:id="@+id/category"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/category"
         android:textStyle="bold"
-        android:textSize="12sp"
-        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleField"/>
 
     <EditText
         android:id="@+id/categoryField"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:textSize="12sp"
+        android:textSize="20sp"
         android:hint="@string/event_category"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/category"/>
@@ -52,21 +52,21 @@
     <TextView
         android:id="@+id/date"
         android:text="@string/date"
-        android:textSize="12sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryField"/>
+        app:layout_constraintStart_toEndOf="@id/titleField"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <CalendarView
         android:id="@+id/eventCalendar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_marginTop="3dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/categoryField"
         app:layout_constraintTop_toBottomOf="@id/date"/>
 
     <Button

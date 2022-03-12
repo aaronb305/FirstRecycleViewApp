@@ -10,6 +10,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        navigate(supportFragmentManager, FirstFragment.newInstance("", ""))
+        if (savedInstanceState == null) {
+            navigate(supportFragmentManager, FirstFragment.newInstance("", ""))
+        }
     }
 }
