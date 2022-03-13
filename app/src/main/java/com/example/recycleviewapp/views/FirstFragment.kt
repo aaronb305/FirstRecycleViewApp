@@ -1,9 +1,7 @@
 package com.example.recycleviewapp.views
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.usage.UsageEvents
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,18 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.recycleviewapp.EventDatabaseSingle
 import com.example.recycleviewapp.MySingleton
 import com.example.recycleviewapp.R
 import com.example.recycleviewapp.adapter.MyEventAdapter
-import com.example.recycleviewapp.database.EventData
 import com.example.recycleviewapp.database.EventDatabase
 import com.example.recycleviewapp.databinding.FragmentFirstBinding
-import com.example.recycleviewapp.model.Event
 import com.example.recycleviewapp.navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -33,20 +29,10 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.properties.Delegates
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
- * A simple [Fragment] subclass.
- * Use the [FirstFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Everytime you create a new fragment using AS, please ensure to delete the code that is unused.
  */
 class FirstFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private val binding by lazy {
         FragmentFirstBinding.inflate(layoutInflater)
@@ -56,19 +42,15 @@ class FirstFragment : Fragment() {
         MyEventAdapter()
     }
 
-    private val bundle by lazy {
-        Bundle()
+    private val database by lazy {
+        EventDatabaseSingle.getDatabase(requireContext())
+    }
+
+    private val disposable by lazy {
+        CompositeDisposable()
     }
 
     private var notification by Delegates.notNull<Boolean>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,15 +66,14 @@ class FirstFragment : Fragment() {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     val selectedItem = p0?.getItemAtPosition(p2).toString()
                     val stringArray = resources.getStringArray(R.array.howToSort)
-                    if (selectedItem.equals(stringArray[0])) {
-                        val ascending = MySingleton.event.sortBy {
-                            it.date
-                        }
+                    if (selectedItem == stringArray[0]) {
+
+                        // this variable is not used
+                        MySingleton.event.sortBy { it.date }
                     }
                     else {
-                        var descending = MySingleton.event.sortByDescending {
-                           it.date
-                        }
+                        // this variable is not used
+                        MySingleton.event.sortByDescending { it.date }
                     }
 
 
@@ -100,28 +81,36 @@ class FirstFragment : Fragment() {
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
-                    TODO("Not yet implemented")
+                    // if this one is not used, removed the missing part adn just mark it as no-op
+                    // no-op
+
+                    // if you leave the todo
+                    // then you will have an exception if that code is reached
                 }
             }
-            val database = Room.databaseBuilder(requireContext(), EventDatabase::class.java, "EventDatabase")
-                .build()
-            val eventDao = database.eventDao()
-//            eventDao.getAll()
-//                .subscribeOn(Schedulers.io())
-//                .subscribe({Log.d("****",it[1].title)},
-//                    {})
-//                .apply {
-//                    CompositeDisposable().add(this)
-//                }
+
+            database.eventDao().getAll()
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                        Log.d("FirstFragment", "***** Items loaded " + it.size)
+                        MySingleton.event = it.toMutableList()
+                        eventAdapter.updateEventData(MySingleton.event)
+
+                    },
+                    { Log.e("FirstFragment", "***** Error getting database") }
+                )
+                .apply {
+                    disposable.add(this)
+                }
         }
 
         binding.floatingButton.setOnClickListener {
-            navigate(supportFragmentManager = requireActivity().supportFragmentManager, SecondFragment.newInstance("", ""))
+            navigate(supportFragmentManager = requireActivity().supportFragmentManager, SecondFragment.newInstance())
         }
 
         eventAdapter.setOnItemClickListener(object: MyEventAdapter.OnEventClickListener{
             override fun onEventClick(position: Int) {
-                bundle.putInt("position", position)
                 navigate(supportFragmentManager = requireActivity().supportFragmentManager, ThirdFragment.newInstance(position))
             }
         })
@@ -157,6 +146,14 @@ class FirstFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        disposable.dispose()
+    }
+
+    // commented code should be removed as well as unused code
+
 //    override fun onSaveInstanceState(outState: Bundle) {
 //        super.onSaveInstanceState(outState)
 //        requireActivity().supportFragmentManager.putFragment(outState, "First Fragment", myFragment)
@@ -170,21 +167,8 @@ class FirstFragment : Fragment() {
 
     companion object {
         /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FirstFragment.
+         * If arguments are not used right here, just remove them
          */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FirstFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = FirstFragment()
     }
 }

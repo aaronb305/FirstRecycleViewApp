@@ -1,30 +1,28 @@
 package com.example.recycleviewapp.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
+import com.example.recycleviewapp.model.Event
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
 @Dao
 interface EventDao {
-    @Query("SELECT * FROM eventData")
-    fun getAll() : Single<List<EventData>>
+    @Query("SELECT * FROM event")
+    fun getAll() : Single<List<Event>>
 
-    @Query("SELECT * FROM eventData WHERE userId IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray) : Single<EventData>
+//    @Query("SELECT * FROM event WHERE userId IN (:userIds)")
+//    fun loadAllByIds(userIds: IntArray) : Single<Event>
 
-    @Query("SELECT * FROM eventData WHERE category LIKE :category")
-    fun findByCategory(category: String) : Single<EventData>
+    @Query("SELECT * FROM event WHERE category LIKE :category")
+    fun findByCategory(category: String) : Single<Event>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertEvent(eventData: Event): Completable
 
     @Insert
-    fun insertUser(eventData: EventData): Completable
-
-    @Insert
-    fun insertAll(vararg eventData: EventData): Completable
+    fun insertAll(vararg eventData: Event): Completable
 
     @Delete
-    fun delete(eventData: EventData): Completable
+    fun delete(eventData: Event): Completable
 }
