@@ -45,11 +45,7 @@ class MyEventAdapter(
     }
 
     override fun getItemCount(): Int = eventList.size
-
-
-
 }
-
 
 class EventViewHolder(itemView: View, listener: MyEventAdapter.OnEventClickListener) : RecyclerView.ViewHolder(itemView) {
     private val title: TextView = itemView.findViewById(R.id.eventTitle)

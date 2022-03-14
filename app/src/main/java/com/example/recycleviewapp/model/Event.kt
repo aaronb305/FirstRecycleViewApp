@@ -1,8 +1,11 @@
 package com.example.recycleviewapp.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class Event(
-    var title: String,
+    @PrimaryKey var title: String,
     var category: String,
     var date: String
-) {
-}
+)
